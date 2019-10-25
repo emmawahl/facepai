@@ -69,7 +69,7 @@ NAME_OF_SOURCE2 = name of second source, e.g. GenBank.
 INPUTFILE1 = First FASTA-file to be merged.
 INPUTFILE2 = Second FASTA-file to be merged.
 
-### 5. Making a BLAST database
+### 6. Making a BLAST database
 It is highly recommended to construct a BLAST database from the reference FASTA-file, this will drastically improve performance and memory use. The command for making a BLAST database is:
 
     makeblastdb -in FASTA_FILE -title "NAME_OF_DATABASE" -dbtype nucl
@@ -77,10 +77,10 @@ It is highly recommended to construct a BLAST database from the reference FASTA-
 FASTA_FILE = the FASTA-file containing reference sequences
 NAME_OF_DATABASE = the name of the database
 
-### 6. Configuration
+### 7. Configuration
 Configuration is carried out by editing the variables in the file “options.config”. The variables that needs to be changed accordingly are forward primer, reverse primer, minimum length and the path to the reference sequences database. Be aware that the reverse primer must be entered as reverse complemented. The table headers may be left as default if using information from BOLD, unless the reference sequences are prepared differently than described in this document, or provided from a different source with different metadata in different order.
 
-### 7. Executing FACEPAI
+### 8. Executing FACEPAI
 FACEPAI is executed in the Bash terminal from the folder containing the FASTQ-files with reads.
 
     ./PATH_TO_SCRIPT/facepai.sh SAMPLE_NAME FORWARD_IDENTIFIER.fastq REVERSE_IDENTIFIER.fastq
@@ -94,7 +94,7 @@ Example:
 
     ./home/UserName/Scripts/facepai.sh SoilSample1A _F.fastq _R.fastq
 
-### 8. Results
+### 9. Results
 The script will produce a number of files that can be used for statistics, and one tab-delimited file containing the BLAST results. The BLAST results are by default reported with the 10 top hits, along with a unique query sequence identifier, number of sequences included in the mOTU, identity in percent, e-value, query coverage in percent, source of subject (e.g. BOLD or GenBank if using concatenated files produced in CaPReSe), subject ID, BOLD BIN URI, taxon name, GenBank ID for BOLD subjects with corresponding GenBank data, country and taxonomic lineage. This may differ if another source or preparation of reference sequences are used, and if the heading settings are changed in the configuration file.
 
 ### 8. References
