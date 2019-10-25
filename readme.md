@@ -97,7 +97,7 @@ Example:
 ### 9. Results
 The script will produce a number of files that can be used for statistics, and one tab-delimited file containing the BLAST results. The BLAST results are by default reported with the 10 top hits, along with a unique query sequence identifier, number of sequences included in the mOTU, identity in percent, e-value, query coverage in percent, source of subject (e.g. BOLD or GenBank if using concatenated files produced in CaPReSe), subject ID, BOLD BIN URI, taxon name, GenBank ID for BOLD subjects with corresponding GenBank data, country and taxonomic lineage. This may differ if another source or preparation of reference sequences are used, and if the heading settings are changed in the configuration file.
 
-### 8. References
+### 10. References
 Camacho, C., Coulouris, G., Avagyan, V., Ma, N., Papadopoulos, J., Bealer, K. & Madden, T. L. 2009. BLAST+: architecture and applications. BMC bioinformatics 10: 421.
 
 Chen, S.,Zhou, Y., Chen, . &, Gu, J. 2018. fastp: an ultra-fast all-in-one FASTQ preprocessor. Bioinformatics 17: 884–i890, doi: 10.1093/bioinformatics/bty560.
