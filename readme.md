@@ -37,10 +37,20 @@ The most time consuming part of this process is downloading the reference databa
 
 The resulting table can be manually curated and checked for discrepancies and ambiguities in preferable spread sheet editor. FACEPAI will return the top 10 hits for each sequence, to aid in the evaluation of each identification. If the recommended process for reference sequences file preparation described below is followed, the results will also report country of hit specimens as well as taxonomic lineage.
 
+To install (from terminal):
+Make sure you have Git installed. Change the current working directory to the location where you want the cloned directory with the FACEPAI scripts to be made.
+Type:
+    
+    $ git clone https://github.com/emmawahl/facepai.git
+
+Change to the newly created directory. Make sure the scripts are executable by typing:
+
+    $ chmod u+x *.sh
+
 ### 3. Getting BOLD reference sequences
 The script FACEPAI is constructed to format a results table using a database file retrieved from the Barcode of Life Database (BOLD). The standard FASTA-file downloaded from BOLD will not include information about location and taxonomic lineage. Therefor it is recommended to download a TSV-file (option “Combined: TSV” at BOLD website), and thereafter convert the TSV-file to a FASTA-file. The script CaPReSe can be used to convert the TSV-file to a FASTA-file. The script will at the same time automatically filter out sequences that are not assigned to a BIN URI, to assure that only validated quality sequences are kept.
 
-    ./PATH_TO_SCRIPT/caprese.sh -C INPUT OUTPUT
+    $ ./PATH_TO_SCRIPT/caprese.sh -C INPUT OUTPUT
 
 INPUT = TSV-file from BOLD
 OUTPUT = name of resulting FASTA-file
@@ -48,7 +58,7 @@ OUTPUT = name of resulting FASTA-file
 ### 4. Preparing a FASTA-file from BOLD or other sources for analysis using CaPReSe
 The resulting file from the previous step will need some additional preparation before it is ready for analysis with FACEPAI. If you are using a different database file than a FASTA-file from BOLD and want to use the script unmodified, you need a FASTA-file with a ID followed by a pipe sign, followed by taxon name. Any additional information should also be separated with a pipe sign. Preparing a single FASTA-file for analysis following this format can be done with CaPReSe. If you want to merge the BOLD FASTA-file with GenBank data, you may skip this step.
 
-    ./PATH_TO_SCRIPT/caprese.sh -P NAME_OF_SOURCE INPUTFILE
+    $ ./PATH_TO_SCRIPT/caprese.sh -P NAME_OF_SOURCE INPUTFILE
 
 NAME_OF_SOURCE = name of the source, e.g. BOLD, GenBank or any other name.
 INPUTFILE = FASTA-file to be prepared.
@@ -58,11 +68,11 @@ CaPReSe can be used to merge and prepare FASTA-files for direct use with FACEPAI
 
 Suggestion of commands for converting GenBank GB-file to FASTA-file, including accession number and taxon name:
 
-    ./genbank_to_fasta.py -i seqs.gb -s whole -a 'accessions','organism' -d pipe
+    $ ./genbank_to_fasta.py -i seqs.gb -s whole -a 'accessions','organism' -d pipe
 
 The merging and preparation of two FASTA-files using CaPReSe is done in one step.
 
-    ./PATH_TO_SCRIPT/caprese.sh -M NAME_OF_SOURCE1 NAME_OF_SOURCE2 INPUTFILE1 INPUTFILE2
+    $ ./PATH_TO_SCRIPT/caprese.sh -M NAME_OF_SOURCE1 NAME_OF_SOURCE2 INPUTFILE1 INPUTFILE2
 
 NAME_OF_SOURCE1 = name of first source, e.g. BOLD.
 NAME_OF_SOURCE2 = name of second source, e.g. GenBank.
@@ -72,7 +82,7 @@ INPUTFILE2 = Second FASTA-file to be merged.
 ### 6. Making a BLAST database
 It is highly recommended to construct a BLAST database from the reference FASTA-file, this will drastically improve performance and memory use. The command for making a BLAST database is:
 
-    makeblastdb -in FASTA_FILE -title "NAME_OF_DATABASE" -dbtype nucl
+    $ makeblastdb -in FASTA_FILE -title "NAME_OF_DATABASE" -dbtype nucl
 
 FASTA_FILE = the FASTA-file containing reference sequences
 NAME_OF_DATABASE = the name of the database
@@ -83,7 +93,7 @@ Configuration is carried out by editing the variables in the file “options.con
 ### 8. Executing FACEPAI
 FACEPAI is executed in the Bash terminal from the folder containing the FASTQ-files with reads.
 
-    ./PATH_TO_SCRIPT/facepai.sh SAMPLE_NAME FORWARD_IDENTIFIER.fastq REVERSE_IDENTIFIER.fastq
+    $ ./PATH_TO_SCRIPT/facepai.sh SAMPLE_NAME FORWARD_IDENTIFIER.fastq REVERSE_IDENTIFIER.fastq
 
 PATH_TO_SCRIPT = the path to where the script is stored in the file system.
 SAMPLE_NAME = the name of the sample.
@@ -92,7 +102,7 @@ FORWARD_IDENTIFIER = same as above but for reverse reads.
 
 Example:
 
-    ./home/UserName/Scripts/facepai.sh SoilSample1A _F.fastq _R.fastq
+    $ ./home/UserName/Scripts/facepai.sh SoilSample1A _F.fastq _R.fastq
 
 ### 9. Results
 The script will produce a number of files that can be used for statistics, and one tab-delimited file containing the BLAST results. The BLAST results are by default reported with the 10 top hits, along with a unique query sequence identifier, number of sequences included in the mOTU, identity in percent, e-value, query coverage in percent, source of subject (e.g. BOLD or GenBank if using concatenated files produced in CaPReSe), subject ID, BOLD BIN URI, taxon name, GenBank ID for BOLD subjects with corresponding GenBank data, country and taxonomic lineage. This may differ if another source or preparation of reference sequences are used, and if the heading settings are changed in the configuration file.
