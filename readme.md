@@ -17,19 +17,22 @@ Documentation contents:
 10. References
 
 ### 1. Software prerequisites
-**fastp 0.19.6** (should be installed with link in bin to allow global access) (Chen et al., 2018)
-**vsearch 2.7.1** (Rognes et al., 2016)
-**cutadapt 1.15** (Martin, 2011)
-**swarm 2.2.2** (Mahé, 2014; Mahé, 2015)
-**blastn 2.6.0** (Camacho et al., 2009)
-**makdeblastdb 2.6.0** (Camacho et al., 2009)
+The scripts FACEPAI and CaPReSe are executed in Bash in a Linux environment. The scripts have been developed and tested on Ubuntu 18.04.2 LTS.
+
+Additional software required:
+**fastp 0.19.6** (should be installed with link in bin to allow global access) (Chen et al., 2018)  
+**vsearch 2.7.1** (Rognes et al., 2016)  
+**cutadapt 1.15** (Martin, 2011)  
+**swarm 2.2.2** (Mahé, 2014; Mahé, 2015)  
+**blastn 2.6.0** (Camacho et al., 2009)  
+**makdeblastdb 2.6.0** (Camacho et al., 2009)  
 
 The scripts are tested with version numbers above, they may work with both earlier and later versions.
 
 ### 2. Introduction and how it works
 The scripts and associated software are executed in Bash in a Linux environment. Prerequisites may vary depending on operating system environment and application versions. Please see manuals for each application for appropriate modifications to the pipeline according to individual installations and requisites. Make sure that the scripts (files ending with .sh) are made executable and may write to new files (use the command `chmod u+x *.sh` from the terminal). Parts of the script are adapted from Mahé (2018). The scripts are developed and tested in a Ubuntu Linux environment.
 
-Example data are availabe in the SourceForge repository (https://sourceforge.net/projects/facepai/). Within the example_data folder there are also a subset of data from Sigsgaard et al. (2019), where FACEPAI is compared to the method used in that paper.
+Example data are availabe in a separate repository (https://1drv.ms/u/s!AicMLmGiK8MpiKsBcG6VGn-GV7NxnA?e=bE7NOf) (See Wahlberg, 2019 for details). Within the repository there are also a subset of data from Sigsgaard et al. (2019), where FACEPAI is compared to the method used in that paper.
 
 The script FACEPAI first filters the forward and reversed reads for each replicate while at the same time merging them utilizing fastp with paired ended base correction option to filter out low quality reads (standard setting is keeping reads with phred >=Q15, overlap difference limit 40%, overlap length require 10%). The individual replicates (if more than one replicate is available) are then pooled. Primers and reads below minimum length are removed using cutadapt, and the sequences are then filtered again using vsearch to remove sequences with N:s. Sequences are then dereplicated before mOTU:s are clustered using swarm, and checking for chimeras is carried out using vsearch. The resulting mOTU:s are thereafter BLAST-searched against the database file using blastn.
 
@@ -50,7 +53,7 @@ Change to the newly created directory. Make sure the scripts are executable by t
 ### 3. Getting BOLD reference sequences
 The script FACEPAI is constructed to format a results table using a database file retrieved from the Barcode of Life Database (BOLD). The standard FASTA-file downloaded from BOLD will not include information about location and taxonomic lineage. Therefor it is recommended to download a TSV-file (option “Combined: TSV” at BOLD website), and thereafter convert the TSV-file to a FASTA-file. The script CaPReSe can be used to convert the TSV-file to a FASTA-file. The script will at the same time automatically filter out sequences that are not assigned to a BIN URI, to assure that only validated quality sequences are kept.
 
-    $ ./PATH_TO_SCRIPT/caprese.sh -C INPUT OUTPUT
+    $ /PATH_TO_SCRIPT/caprese.sh -C INPUT OUTPUT
 
 INPUT = TSV-file from BOLD
 OUTPUT = name of resulting FASTA-file
@@ -58,7 +61,7 @@ OUTPUT = name of resulting FASTA-file
 ### 4. Preparing a FASTA-file from BOLD or other sources for analysis using CaPReSe
 The resulting file from the previous step will need some additional preparation before it is ready for analysis with FACEPAI. If you are using a different database file than a FASTA-file from BOLD and want to use the script unmodified, you need a FASTA-file with a ID followed by a pipe sign, followed by taxon name. Any additional information should also be separated with a pipe sign. Preparing a single FASTA-file for analysis following this format can be done with CaPReSe. If you want to merge the BOLD FASTA-file with GenBank data, you may skip this step.
 
-    $ ./PATH_TO_SCRIPT/caprese.sh -P NAME_OF_SOURCE INPUTFILE
+    $ /PATH_TO_SCRIPT/caprese.sh -P NAME_OF_SOURCE INPUTFILE
 
 NAME_OF_SOURCE = name of the source, e.g. BOLD, GenBank or any other name.
 INPUTFILE = FASTA-file to be prepared.
@@ -68,11 +71,11 @@ CaPReSe can be used to merge and prepare FASTA-files for direct use with FACEPAI
 
 Suggestion of commands for converting GenBank GB-file to FASTA-file, including accession number and taxon name:
 
-    $ ./genbank_to_fasta.py -i seqs.gb -s whole -a 'accessions','organism' -d pipe
+    $ /genbank_to_fasta.py -i seqs.gb -s whole -a 'accessions','organism' -d pipe
 
 The merging and preparation of two FASTA-files using CaPReSe is done in one step.
 
-    $ ./PATH_TO_SCRIPT/caprese.sh -M NAME_OF_SOURCE1 NAME_OF_SOURCE2 INPUTFILE1 INPUTFILE2
+    $ /PATH_TO_SCRIPT/caprese.sh -M NAME_OF_SOURCE1 NAME_OF_SOURCE2 INPUTFILE1 INPUTFILE2
 
 NAME_OF_SOURCE1 = name of first source, e.g. BOLD.
 NAME_OF_SOURCE2 = name of second source, e.g. GenBank.
@@ -93,7 +96,7 @@ Configuration is carried out by editing the variables in the file “options.con
 ### 8. Executing FACEPAI
 FACEPAI is executed in the Bash terminal from the folder containing the FASTQ-files with reads.
 
-    $ ./PATH_TO_SCRIPT/facepai.sh SAMPLE_NAME FORWARD_IDENTIFIER.fastq REVERSE_IDENTIFIER.fastq
+    $ /PATH_TO_SCRIPT/facepai.sh SAMPLE_NAME FORWARD_IDENTIFIER.fastq REVERSE_IDENTIFIER.fastq
 
 PATH_TO_SCRIPT = the path to where the script is stored in the file system.
 SAMPLE_NAME = the name of the sample.
@@ -102,7 +105,7 @@ FORWARD_IDENTIFIER = same as above but for reverse reads.
 
 Example:
 
-    $ ./home/UserName/Scripts/facepai.sh SoilSample1A _F.fastq _R.fastq
+    $ /home/UserName/Scripts/facepai.sh SoilSample1A _F.fastq _R.fastq
 
 ### 9. Results
 The script will produce a number of files that can be used for statistics, and one tab-delimited file containing the BLAST results. The BLAST results are by default reported with the 10 top hits, along with a unique query sequence identifier, number of sequences included in the mOTU, identity in percent, e-value, query coverage in percent, source of subject (e.g. BOLD or GenBank if using concatenated files produced in CaPReSe), subject ID, BOLD BIN URI, taxon name, GenBank ID for BOLD subjects with corresponding GenBank data, country and taxonomic lineage. This may differ if another source or preparation of reference sequences are used, and if the heading settings are changed in the configuration file.
@@ -120,8 +123,10 @@ Mahé, F., Rognes, T., Quince, C., de Vargas, C. & Dunthorn M. 2015. Swarm v2: h
 
 Mahé, F. 2018. Fred's metabarcoding pipeline. Available at: https://github.com/frederic-mahe/swarm/wiki/Fred's-metabarcoding-pipeline. [Accessed 11 October 2018].
 
-Martin, M. 2011) Cutadapt removes adapter sequences from high-throughput sequencing reads. EMBnet.journal 17: 10–12, doi: 10.14806/ej.17.1.200.
+Martin, M. 2011. Cutadapt removes adapter sequences from high-throughput sequencing reads. EMBnet.journal 17: 10–12, doi: 10.14806/ej.17.1.200.
 
 Rognes, T., Flouri, T., Nichols, B., Quince, C., Mahé, F. 2016. VSEARCH: a versatile open source tool for metagenomics. PeerJ: 4:e2584. doi: 10.7717/peerj.2584.
 
 Sigsgaard, E E, Nielsen, I B, Carl, H, Krag, M A, Knudsen, S W, Xing, Y, Holm‑Hansen, T H, Møller, P R, Thomsen, P F. Seawater environmental DNA reflects seasonality of a coastal fish community. Marine Biology 2017; doi: 10.1007/s00227-017-3147-4.
+
+Wahlberg, E. 2019. FACEPAI – A script for fast and consistent environmental DNA processing and identification. BMC Ecology, in review.
