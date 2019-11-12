@@ -19,7 +19,7 @@ Documentation contents:
 ### 1. Software prerequisites
 The scripts FACEPAI and CaPReSe are executed in Bash in a Linux environment. The scripts have been developed and tested on Ubuntu 18.04.2 LTS.
 
-Additional software required:
+Additional software required:  
 **fastp 0.19.6** (should be installed with link in bin to allow global access) (Chen et al., 2018)  
 **vsearch 2.7.1** (Rognes et al., 2016)  
 **cutadapt 1.15** (Martin, 2011)  
