@@ -1,5 +1,5 @@
 # ﻿FACEPAI (& CaPReSe)
-## Fast And Consistent Environmental-DNA Processing And Identification (& Conversion and Preparation of Reference Sequences)
+## Fast And Consistent Environmental-DNA Processing And Identification (& Conversion and Preparation of Reference Sequences)  
 
 Scripts for executing a filtering, clustering and identification pipeline for eDNA samples
 Emma Wahlberg, Swedish Museum of Natural History, 2019, emma.wahlberg@nrm.se
