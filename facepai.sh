@@ -128,28 +128,15 @@ do
   REPMERGED=${f/$INPUTENDINGF/_merged.fastq}
   read -p $'\n'$"Processing ${FORWARDREAD} and ${REVERSEREAD}."$'\n' -t 0.5
   read -p $'\n'$""$'\n' -t 0.5
-  fastp -m -u 100 -q 15 -c -L --overlap_len_require 10 --overlap_diff_percent_limit 40 -i "${FORWARDREAD}" -I "${REVERSEREAD}" --merged_out "${REPMERGED}"
+  fastp -m -A -u 100 -q 15 -c -L --overlap_len_require 10 --overlap_diff_percent_limit 40 -i "${FORWARDREAD}" -I "${REVERSEREAD}" --merged_out "${REPMERGED}"
 done
 
 cat *_merged.fastq > "${INPUT}"
 
 # Remove primers
 
-read -p $'\n'$"Primers and minimum length defined:"$'\n' -t 0.5
-
-echo Forward primer: ${PRIMER_F}
-echo Reverse complemented primer: ${PRIMER_R}
-echo Minimum length: ${MIN_LENGTH}
-
-read -p $'\n'$"Removing primers..."$'\n' -t 1
-
-MIN_F=$(( ${#PRIMER_F} * 2 / 3 ))
-MIN_R=$(( ${#PRIMER_R} * 2 / 3 ))
-
-
 # Define binaries, temporary files and output files
 
-CUTADAPT="$(which cutadapt) --discard-untrimmed --minimum-length ${MIN_LENGTH}"
 VSEARCH=$(which vsearch)
 INPUT_REVCOMP=$(mktemp)
 TMP_FASTQ=$(mktemp)
@@ -158,20 +145,67 @@ TMP_FASTA=$(mktemp)
 OUTPUT=$(mktemp)
 QUALITY_FILE="${INPUT/.fastq/.qual}"
 
-# Reverse complement fastq file
+declare -a PRIMERF_LIST
+declare -a PRIMERR_LIST
+declare -a MIN_LENGTHS_LIST
 
-"${VSEARCH}" --quiet \
-             --fastx_revcomp "${INPUT}" \
-             --fastqout "${INPUT_REVCOMP}"
+for i in `echo $PRIMERS_F|tr ',' '\n'`
+  do
+    PRIMERF_LIST+=($i)
+  done
+for i in `echo $PRIMERS_R|tr ',' '\n'`
+  do
+    PRIMERR_LIST+=($i)
+  done
+for i in `echo $MIN_LENGTHS|tr ',' '\n'`
+  do
+    MIN_LENGTHS_LIST+=($i)
+  done
 
-    LOG="${INPUT}.log"
-    FINAL_FASTA="${INPUT}.fas"
+LOG="${INPUT}_cudadapt.log"
+FINAL_FASTA="${INPUT}.fas"
 
-# Trim forward & reverse primers (search normal and antisens)
-cat "${INPUT}" "${INPUT_REVCOMP}" | \
+read -p $'\n'$"Removing primers..."$'\n' -t 1
+echo Number of primer pairs configured: ${PRIMER_SETUP}
+read -p $'\n' -t 0.5
+
+for ((i = 0; i < $PRIMER_SETUP; i++))
+	do
+      ACTIVE_PAIR=$((i+1))
+      MIN_LENGTH=${MIN_LENGTHS_LIST[i]}
+      PRIMER_F=${PRIMERF_LIST[i]}
+      PRIMER_R=${PRIMERR_LIST[i]}
+      CUTADAPT="$(which cutadapt) --discard-untrimmed --minimum-length ${MIN_LENGTH}"
+      TMP_TRIMMED=$(mktemp)
+      read -p $'\n' -t 0.5
+      echo Working with primer pair: ${ACTIVE_PAIR}
+      read -p $'\n' -t 0.5
+      echo Forward primer: ${PRIMER_F}
+      echo Reverse complemented primer: ${PRIMER_R}
+      echo Minimum length: ${MIN_LENGTH}
+
+      MIN_F=$(( ${#PRIMER_F} * 2 / 3 ))
+      MIN_R=$(( ${#PRIMER_R} * 2 / 3 ))
+
+      # Reverse complement fastq file
+
+      "${VSEARCH}" --quiet \
+        --fastx_revcomp "${INPUT}" \
+        --fastqout "${INPUT_REVCOMP}"
+
+        # Trim forward & reverse primers (search normal and antisens)
+
+      cat "${INPUT}" "${INPUT_REVCOMP}" | \
       ${CUTADAPT} -g "${PRIMER_F}" -O "${MIN_F}" - 2>> "${LOG}" | \
-      ${CUTADAPT} -a "${PRIMER_R}" -O "${MIN_R}" - 2>> "${LOG}" > "${TMP_FASTQ}"
+      ${CUTADAPT} -a "${PRIMER_R}" -O "${MIN_R}" - 2>> "${LOG}" > "${TMP_TRIMMED}"
+      cat ${TMP_TRIMMED} >> ${TMP_FASTQ}
+      echo Sequences from primer pair ${ACTIVE_PAIR}: `wc -l ${TMP_TRIMMED} | awk '{ print $1 }'`
+      rm -f "${TMP_TRIMMED}"
+done
 
+read -p $'\n' -t 0.5
+echo Total sequences after primer trimming: `wc -l ${TMP_FASTQ} | awk '{ print $1 }'`
+read -p $'\n' -t 0.5
 read -p $'\n'$"Additional filtering using VSEARCH..."$'\n' -t 0.5
 read -p $'\n'$"Discarding sequences with N:s, converting to FASTA and dereplicate."$'\n' -t 1
 
