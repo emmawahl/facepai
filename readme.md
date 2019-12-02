@@ -2,7 +2,7 @@
 ## Fast And Consistent Environmental-DNA Processing And Identification (& Conversion and Preparation of Reference Sequences)  
 
 Scripts for executing a filtering, clustering and identification pipeline for eDNA samples  
-Emma Wahlberg, Swedish Museum of Natural History, 2019, emma.wahlberg@nrm.se
+Emma Wahlberg, Swedish Museum of Natural History, 2019, emma.wahlberg@nrm.se.
 
 Documentation contents:
 1. Software prerequisites
@@ -43,7 +43,7 @@ The resulting table can be manually curated and checked for discrepancies and am
 To install (from terminal):
 Make sure you have Git installed. Change the current working directory to the location where you want the cloned directory with the FACEPAI scripts to be made.
 Type:
-    
+
     $ git clone https://github.com/emmawahl/facepai.git
 
 Change to the newly created directory. Make sure the scripts are executable by typing:
