@@ -4,6 +4,9 @@
 Scripts for executing a filtering, clustering and identification pipeline for eDNA samples  
 Emma Wahlberg, Swedish Museum of Natural History, 2019, emma.wahlberg@nrm.se
 
+**Citation:**
+Wahlberg, E. 2019. FACEPAI: a script for fast and consistent environmental DNA processing and identification. BMC Ecology 19: 51, doi:10.1186/s12898-019-0269-1.
+
 Documentation contents:
 1. Software prerequisites
 2. Introduction and how it works
@@ -43,7 +46,7 @@ The resulting table can be manually curated and checked for discrepancies and am
 To install (from terminal):
 Make sure you have Git installed. Change the current working directory to the location where you want the cloned directory with the FACEPAI scripts to be made.
 Type:
-    
+
     $ git clone https://github.com/emmawahl/facepai.git
 
 Change to the newly created directory. Make sure the scripts are executable by typing:
@@ -129,4 +132,4 @@ Rognes, T., Flouri, T., Nichols, B., Quince, C., Mahé, F. 2016. VSEARCH: a vers
 
 Sigsgaard, E E, Nielsen, I B, Carl, H, Krag, M A, Knudsen, S W, Xing, Y, Holm‑Hansen, T H, Møller, P R, Thomsen, P F. Seawater environmental DNA reflects seasonality of a coastal fish community. Marine Biology 2017; doi: 10.1007/s00227-017-3147-4.
 
-Wahlberg, E. 2019. FACEPAI – A script for fast and consistent environmental DNA processing and identification. BMC Ecology, in review.
+Wahlberg, E. 2019. FACEPAI: a script for fast and consistent environmental DNA processing and identification. BMC Ecology 19: 51, doi:10.1186/s12898-019-0269-1.
