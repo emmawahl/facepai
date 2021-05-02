@@ -7,7 +7,7 @@ Emma Wahlberg, Swedish Museum of Natural History, 2019, emma.wahlberg@nrm.se
 **Citation:**  
 Wahlberg, E. 2019. FACEPAI: a script for fast and consistent environmental DNA processing and identification. BMC Ecology 19: 51, doi:10.1186/s12898-019-0269-1.
 
-Documentation contents:
+Documentation content:
 1. Software prerequisites
 2. Introduction and how it works
 3. Getting BOLD reference sequences
